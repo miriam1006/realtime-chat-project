@@ -1,0 +1,21 @@
+/* Mensajes míos (Alineados a la derecha) */
+.my-message {
+    text-align: right;
+    background-color: #e3f2fd;
+    /* Azul clarito */
+    padding: 10px;
+    border-radius: 10px;
+    margin-left: 50px;
+    /* Empujar a la derecha */
+}
+
+/* Mensajes de otros (Alineados a la izquierda) */
+.other-message {
+    text-align: left;
+    background-color: #f1f1f1;
+    /* Gris */
+    padding: 10px;
+    border-radius: 10px;
+    margin-right: 50px;
+    /* Empujar a la izquierda */
+}
