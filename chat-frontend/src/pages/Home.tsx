@@ -1,11 +1,13 @@
 import {
   IonContent, IonHeader, IonPage, IonTitle, IonToolbar,
-  IonFooter, IonItem, IonInput, IonButton, IonIcon, IonButtons
+  IonFooter, IonItem, IonInput, IonButton, IonIcon, IonButtons,
+  IonSplitPane, IonMenu, IonList, IonMenuToggle, IonLabel, IonAvatar
 } from '@ionic/react';
-import { send, logOutOutline } from 'ionicons/icons'; // <--- Icono de salir
+import { send, logOutOutline, menu, chatbubbles, personCircle } from 'ionicons/icons';
 import { useState, useEffect } from 'react';
 import io from 'socket.io-client';
-import { useHistory } from 'react-router-dom'; // <--- Importar historial
+import { useHistory } from 'react-router-dom';
+import './Home.css';
 
 // Conectamos al servidor
 const socket = io('http://localhost:3000');
@@ -14,26 +16,21 @@ const Home: React.FC = () => {
   const history = useHistory();
   const [message, setMessage] = useState('');
   const [chatHistory, setChatHistory] = useState<any[]>([]);
-  const [user, setUser] = useState(''); // El usuario empieza vacío
+  const [user, setUser] = useState('');
   const [typingUser, setTypingUser] = useState('');
+  const [currentChannel, setCurrentChannel] = useState('General'); // <--- Nuevo: Control de Canales
 
   useEffect(() => {
-    // 1. VERIFICAR QUIÉN ERES (SEGURIDAD)
     const myName = localStorage.getItem('nickname');
-
     if (!myName) {
-      // Si no hay nombre guardado, ¡fuera de aquí! Vete al Login.
       history.replace('/login');
       return;
     }
-
-    // Si sí existe, lo usamos
     setUser(myName);
 
-    // 2. Unirnos a la sala
-    socket.emit('join', 'General');
+    // Unirnos al canal inicial
+    socket.emit('join', currentChannel);
 
-    // 3. Escuchar mensajes
     socket.on('message', (payload) => {
       setChatHistory((prev) => [...prev, payload]);
     });
@@ -42,9 +39,11 @@ const Home: React.FC = () => {
       setChatHistory(oldMessages);
     });
 
-    socket.on('typing', (user) => {
-      setTypingUser(`${user} está escribiendo...`);
-      setTimeout(() => setTypingUser(''), 2000);
+    socket.on('typing', (typingUsername: string) => {
+      if (typingUsername !== user) {
+        setTypingUser(`${typingUsername} está escribiendo...`);
+        setTimeout(() => setTypingUser(''), 2000);
+      }
     });
 
     return () => {
@@ -52,89 +51,168 @@ const Home: React.FC = () => {
       socket.off('typing');
       socket.off('chat-history');
     };
-  }, [history]); // Agregamos history a las dependencias
+  }, [history, user]);
+
+  // Función para cambiar de canal (solo visual por ahora)
+  const switchChannel = (channelName: string) => {
+    setCurrentChannel(channelName);
+    setChatHistory([]); // Limpiamos pantalla al cambiar
+    socket.emit('join', channelName); // Avisamos al server (aunque falta lógica allá)
+  };
 
   const sendMessage = () => {
     if (message.trim() === '') return;
 
-    // Ahora enviamos el mensaje con TU nombre real
     socket.emit('message', {
-      user: user,  // <--- AQUÍ ESTÁ LA CLAVE
+      user: user,
       text: message,
-      room: 'General',
-      time: new Date().toLocaleTimeString()
+      room: currentChannel, // Ahora enviamos al canal actual
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     });
 
     setMessage('');
   };
 
   const handleTyping = () => {
-    socket.emit('typing', { room: 'General', user: user });
+    socket.emit('typing', { room: currentChannel, user: user });
   };
 
-  // Función para Cerrar Sesión
   const logout = () => {
-    localStorage.clear(); // Borramos credenciales
-    history.replace('/login'); // Nos vamos al login
-    window.location.reload(); // Recargamos para limpiar memoria
+    localStorage.clear();
+    history.replace('/login');
+    window.location.reload();
   };
 
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar color="primary">
-          <IonTitle>Sala General ({user})</IonTitle>
-          {/* Botón de Salir */}
-          <IonButtons slot="end">
-            <IonButton onClick={logout}>
-              <IonIcon icon={logOutOutline} />
+    <IonSplitPane contentId="main-content" className="chat-split-pane">
+      {/* --- BARRA LATERAL (MENU) --- */}
+      <IonMenu contentId="main-content" type="overlay" className="chat-sidebar">
+        <IonHeader className="sidebar-header">
+          <IonToolbar>
+            <IonTitle className="sidebar-title">Empresa S.A.</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent className="sidebar-content">
+          {/* Sección de Canales */}
+          <IonList className="channel-list">
+            <IonItem lines="none" className="channel-list-label">
+              <IonLabel>CANALES</IonLabel>
+            </IonItem>
+
+            <IonMenuToggle autoHide={false}>
+              <IonItem button onClick={() => switchChannel('General')} className={`channel-item ${currentChannel === 'General' ? 'channel-item--active' : ''}`}>
+                <IonIcon icon={chatbubbles} slot="start" size="small" />
+                <IonLabel>General</IonLabel>
+              </IonItem>
+              <IonItem button onClick={() => switchChannel('Proyectos')} className={`channel-item ${currentChannel === 'Proyectos' ? 'channel-item--active' : ''}`}>
+                <IonIcon icon={chatbubbles} slot="start" size="small" />
+                <IonLabel>Proyectos</IonLabel>
+              </IonItem>
+              <IonItem button onClick={() => switchChannel('Ventas')} className={`channel-item ${currentChannel === 'Ventas' ? 'channel-item--active' : ''}`}>
+                <IonIcon icon={chatbubbles} slot="start" size="small" />
+                <IonLabel>Ventas</IonLabel>
+              </IonItem>
+            </IonMenuToggle>
+          </IonList>
+
+          {/* Sección de Usuario */}
+          <div className="sidebar-user-section">
+            <IonItem lines="none" className="user-info-item">
+              <IonIcon icon={personCircle} slot="start" className="user-avatar-icon" />
+              <IonLabel>
+                <h2 className="user-name">{user}</h2>
+                <p className="user-status">● En línea</p>
+              </IonLabel>
+            </IonItem>
+            <IonButton expand="block" fill="outline" onClick={logout} className="logout-btn">
+              <IonIcon icon={logOutOutline} slot="start" /> Salir
             </IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+          </div>
+        </IonContent>
+      </IonMenu>
 
-      <IonContent className="ion-padding">
+      {/* --- AREA PRINCIPAL (CHAT) --- */}
+      <IonPage id="main-content" className="chat-main-page">
+        <IonHeader className="chat-header">
+          <IonToolbar>
+            <IonButtons slot="start">
+              <IonMenuToggle>
+                <IonButton className="menu-toggle-btn"><IonIcon icon={menu} /></IonButton>
+              </IonMenuToggle>
+            </IonButtons>
+            <IonTitle className="chat-channel-title"># {currentChannel}</IonTitle>
+          </IonToolbar>
+        </IonHeader>
 
-        {/* Lista de Mensajes */}
-        <div style={{ marginBottom: '60px' }}>
-          {chatHistory.map((msg, index) => (
-            <div key={index} style={{
-              textAlign: msg.user === user ? 'right' : 'left', // TÚ a la derecha, OTROS a la izquierda
-              margin: '10px 0'
-            }}>
-              <div style={{
-                display: 'inline-block',
-                padding: '10px',
-                borderRadius: '10px',
-                background: msg.user === user ? '#d1c4e9' : '#f1f1f1', // Color diferente para ti
-                color: 'black'
-              }}>
-                <small style={{ fontWeight: 'bold' }}>{msg.user}</small><br />
-                {msg.text}
-              </div>
-            </div>
-          ))}
-          <p style={{ fontStyle: 'italic', color: 'gray' }}>{typingUser}</p>
-        </div>
+        <IonContent className="chat-content ion-padding">
+          <div className="chat-messages-wrap">
+            {chatHistory.map((msg, index) => {
+              const isSystem = msg.user === 'Sistema';
+              const isMine = msg.user === user;
+              if (isSystem) {
+                return (
+                  <div key={index} className="chat-message chat-message--system">
+                    <span className="chat-system-text">{msg.text}</span>
+                  </div>
+                );
+              }
+              return (
+                <div
+                  key={index}
+                  className={`chat-message ${isMine ? 'chat-message--mine' : ''}`}
+                >
+                  <div className="chat-message-inner">
+                    <div className="chat-message-avatar">
+                      {msg.user ? msg.user.charAt(0).toUpperCase() : '?'}
+                    </div>
+                    <div className="chat-message-body">
+                      <div className="chat-message-meta">
+                        <span className="chat-message-user">{msg.user || 'Anónimo'}</span>
+                        <span className="chat-message-time">{msg.time}</span>
+                      </div>
+                      <div className="chat-message-text">{msg.text}</div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+            <p className="chat-typing-indicator">{typingUser}</p>
+          </div>
+        </IonContent>
 
-      </IonContent>
-
-      <IonFooter>
-        <IonToolbar>
-          <IonItem lines="none">
-            <IonInput
-              value={message}
-              placeholder="Escribe algo..."
-              onIonChange={e => setMessage(e.detail.value!)}
-              onKeyUp={handleTyping}
-            />
-            <IonButton slot="end" onClick={sendMessage}>
-              <IonIcon icon={send} />
-            </IonButton>
-          </IonItem>
-        </IonToolbar>
-      </IonFooter>
-    </IonPage>
+        <IonFooter className="chat-footer">
+          <IonToolbar>
+            <form
+              className="chat-input-form"
+              onSubmit={e => {
+                e.preventDefault();
+                sendMessage();
+              }}
+            >
+              <IonItem lines="none" className="chat-input-wrap">
+                <input
+                  type="text"
+                  className="chat-input-native"
+                  value={message}
+                  placeholder={`Enviar mensaje a #${currentChannel}`}
+                  onChange={e => setMessage(e.target.value)}
+                  onKeyUp={handleTyping}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      sendMessage();
+                    }
+                  }}
+                />
+                <IonButton type="submit" slot="end" className="chat-send-btn">
+                  <IonIcon icon={send} />
+                </IonButton>
+              </IonItem>
+            </form>
+          </IonToolbar>
+        </IonFooter>
+      </IonPage>
+    </IonSplitPane>
   );
 };
 

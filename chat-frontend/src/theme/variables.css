@@ -1,2 +1,132 @@
 /* For information on how to create your own theme, please refer to:
 http://ionicframework.com/docs/theming/ */
+
+/* ========== Modo claro - paleta moderna y coherente ========== */
+:root {
+  /* Un solo acento: azul moderno (evita mezcla morado+azul) */
+  --ion-color-primary: #2563eb;
+  --ion-color-primary-rgb: 37, 99, 235;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #2057cf;
+  --ion-color-primary-tint: #3b73ed;
+
+  --ion-color-secondary: #64748b;
+  --ion-color-tertiary: #475569;
+  --ion-color-success: #059669;
+  --ion-color-danger: #dc2626;
+
+  --ion-background-color: #ffffff;
+  --ion-background-color-rgb: 255, 255, 255;
+  --ion-text-color: #1e293b;
+  --ion-text-color-rgb: 30, 41, 59;
+
+  /* Chat - modo claro (sidebar gris neutro, acento azul) */
+  --chat-sidebar-bg: #1e293b;
+  --chat-sidebar-header: #1e293b;
+  --chat-sidebar-text: #f1f5f9;
+  --chat-sidebar-border: rgba(255, 255, 255, 0.06);
+  --chat-channel-active: rgba(255, 255, 255, 0.12);
+  --chat-channel-active-text: #ffffff;
+  --chat-channel-inactive: #94a3b8;
+  --chat-content-bg: #f8fafc;
+  --chat-message-bg-other: #ffffff;
+  --chat-message-border-other: #e2e8f0;
+  --chat-message-bg-mine: #2563eb;
+  --chat-message-text-mine: #ffffff;
+  --chat-message-avatar: #475569;
+  --chat-input-bg: #ffffff;
+  --chat-input-border: #e2e8f0;
+  --chat-input-text: #1e293b;
+  --chat-send-btn: #2563eb;
+  --chat-send-btn-hover: #1d4ed8;
+  --chat-header-bg: #ffffff;
+  --chat-header-border: #e2e8f0;
+  --chat-footer-bg: #ffffff;
+  --chat-footer-border: #e2e8f0;
+  --chat-system-text: #64748b;
+  --chat-system-bg: transparent;
+  --chat-logout-border: #94a3b8;
+  --chat-logout-text: #f1f5f9;
+  --chat-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --chat-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* ========== Modo oscuro - misma coherencia, texto visible ========== */
+.ion-palette-dark,
+[data-theme="dark"] {
+  --ion-background-color: #0f172a;
+  --ion-background-color-rgb: 15, 23, 42;
+  --ion-text-color: #e2e8f0;
+  --ion-text-color-rgb: 226, 232, 240;
+
+  --ion-color-primary: #3b82f6;
+  --ion-color-primary-contrast: #0f172a;
+
+  /* Chat - modo oscuro */
+  --chat-sidebar-bg: #0f172a;
+  --chat-sidebar-header: #0f172a;
+  --chat-sidebar-text: #e2e8f0;
+  --chat-sidebar-border: rgba(255, 255, 255, 0.06);
+  --chat-channel-active: rgba(255, 255, 255, 0.1);
+  --chat-channel-active-text: #ffffff;
+  --chat-channel-inactive: #94a3b8;
+  --chat-content-bg: #0f172a;
+  --chat-message-bg-other: #1e293b;
+  --chat-message-border-other: #334155;
+  --chat-message-bg-mine: #2563eb;
+  --chat-message-text-mine: #ffffff;
+  --chat-message-avatar: #475569;
+  --chat-input-bg: #1e293b;
+  --chat-input-border: #334155;
+  --chat-input-text: #e2e8f0;
+  --chat-send-btn: #3b82f6;
+  --chat-send-btn-hover: #2563eb;
+  --chat-header-bg: #0f172a;
+  --chat-header-border: #334155;
+  --chat-footer-bg: #0f172a;
+  --chat-footer-border: #334155;
+  --chat-system-text: #64748b;
+  --chat-system-bg: transparent;
+  --chat-logout-border: #64748b;
+  --chat-logout-text: #e2e8f0;
+  --chat-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --chat-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* Modo oscuro vía preferencia del sistema */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ion-background-color: #0f172a;
+    --ion-background-color-rgb: 15, 23, 42;
+    --ion-text-color: #e2e8f0;
+    --ion-text-color-rgb: 226, 232, 240;
+    --ion-color-primary: #3b82f6;
+    --chat-sidebar-bg: #0f172a;
+    --chat-sidebar-header: #0f172a;
+    --chat-sidebar-text: #e2e8f0;
+    --chat-sidebar-border: rgba(255, 255, 255, 0.06);
+    --chat-channel-active: rgba(255, 255, 255, 0.1);
+    --chat-channel-active-text: #ffffff;
+    --chat-channel-inactive: #94a3b8;
+    --chat-content-bg: #0f172a;
+    --chat-message-bg-other: #1e293b;
+    --chat-message-border-other: #334155;
+    --chat-message-bg-mine: #2563eb;
+    --chat-message-text-mine: #ffffff;
+    --chat-input-bg: #1e293b;
+    --chat-input-border: #334155;
+    --chat-input-text: #e2e8f0;
+    --chat-send-btn: #3b82f6;
+    --chat-send-btn-hover: #2563eb;
+    --chat-header-bg: #0f172a;
+    --chat-header-border: #334155;
+    --chat-footer-bg: #0f172a;
+    --chat-footer-border: #334155;
+    --chat-system-text: #64748b;
+    --chat-logout-border: #64748b;
+    --chat-logout-text: #e2e8f0;
+    --chat-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --chat-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+}
