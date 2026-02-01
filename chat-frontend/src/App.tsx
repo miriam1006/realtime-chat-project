@@ -40,18 +40,12 @@ const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
       <IonRouterOutlet>
-
-        {/* Ruta para el Login */}
         <Route exact path="/login">
           <Login />
         </Route>
-
-        {/* Ruta para el Chat (Home) */}
         <Route exact path="/home">
           <Home />
         </Route>
-
-        {/* Por defecto, ir al Login */}
         <Route exact path="/">
           <Redirect to="/login" />
         </Route>

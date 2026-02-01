@@ -7,13 +7,10 @@ import { User, UserSchema } from '../schemas/user.schema';
 
 @Module({
     imports: [
-        // 1. Registrar el Schema de Usuario para que este módulo pueda guardar gente
         MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-
-        // 2. Configurar la seguridad (JWT)
         JwtModule.register({
-            secret: 'CLAVE_SECRETA_123', // ⚠️ Se sube por tratarse de un proyecto de prueba
-            signOptions: { expiresIn: '1d' }, // El token dura 1 día
+            secret: 'CLAVE_SECRETA_123',
+            signOptions: { expiresIn: '1d' },
         }),
     ],
     controllers: [AuthController],

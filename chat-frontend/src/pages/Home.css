@@ -1,4 +1,3 @@
-/* ========== Layout general - estilo Slack ========== */
 .chat-split-pane {
   --side-min-width: 260px;
   --side-max-width: 320px;
@@ -11,7 +10,6 @@
   }
 }
 
-/* ========== Barra lateral (Slack: fondo oscuro) ========== */
 .chat-sidebar {
   --background: var(--chat-sidebar-bg);
   border-right: 1px solid var(--chat-sidebar-border);
@@ -42,7 +40,6 @@
   flex-direction: column;
 }
 
-/* Canales */
 .channel-list {
   background: transparent;
   padding: 12px 0;
@@ -100,7 +97,6 @@
   font-weight: 600;
 }
 
-/* Sección usuario y salir */
 .sidebar-user-section {
   margin-top: auto;
   padding: 16px 16px 24px;
@@ -156,7 +152,6 @@
   --background: rgba(255, 255, 255, 0.08);
 }
 
-/* ========== Área principal del chat ========== */
 .chat-main-page {
   --background: var(--chat-content-bg);
 }
@@ -198,7 +193,6 @@
   box-sizing: border-box;
 }
 
-/* ========== Mensajes - alineación tipo conversación ========== */
 .chat-message {
   margin-bottom: 12px;
   display: flex;
@@ -206,7 +200,6 @@
   width: 100%;
 }
 
-/* Mensajes de otros: pegados a la izquierda */
 .chat-message-inner {
   display: flex;
   align-items: flex-start;
@@ -214,7 +207,6 @@
   max-width: 85%;
 }
 
-/* Mensajes míos: pegados a la derecha */
 .chat-message--mine {
   justify-content: flex-end;
 }
@@ -323,7 +315,6 @@
   margin: 8px 0 0 48px;
 }
 
-/* ========== Footer e input ========== */
 .chat-footer {
   --background: var(--chat-footer-bg);
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04);
@@ -355,7 +346,6 @@
   gap: 8px;
 }
 
-/* Input nativo para que Enter envíe correctamente */
 .chat-input-native {
   flex: 1;
   min-width: 0;
@@ -422,7 +412,6 @@
   --background: var(--chat-send-btn-hover);
 }
 
-/* ========== Modo oscuro - asegurar contraste de texto ========== */
 .ion-palette-dark ion-content,
 .ion-palette-dark .chat-content,
 [data-theme="dark"] ion-content,
@@ -445,7 +434,6 @@
   color: var(--ion-text-color);
 }
 
-/* ========== Responsive móvil ========== */
 @media (max-width: 576px) {
   .chat-messages-wrap {
     padding: 0 12px;
@@ -494,7 +482,6 @@
   }
 }
 
-/* Safe area para móviles con notch */
 @supports (padding: max(0px)) {
   .chat-footer {
     padding-bottom: max(8px, env(safe-area-inset-bottom));

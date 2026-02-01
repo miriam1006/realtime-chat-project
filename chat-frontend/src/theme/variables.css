@@ -1,9 +1,7 @@
 /* For information on how to create your own theme, please refer to:
 http://ionicframework.com/docs/theming/ */
 
-/* ========== Modo claro - paleta moderna y coherente ========== */
 :root {
-  /* Un solo acento: azul moderno (evita mezcla morado+azul) */
   --ion-color-primary: #2563eb;
   --ion-color-primary-rgb: 37, 99, 235;
   --ion-color-primary-contrast: #ffffff;
@@ -21,7 +19,6 @@ http://ionicframework.com/docs/theming/ */
   --ion-text-color: #1e293b;
   --ion-text-color-rgb: 30, 41, 59;
 
-  /* Chat - modo claro (sidebar gris neutro, acento azul) */
   --chat-sidebar-bg: #1e293b;
   --chat-sidebar-header: #1e293b;
   --chat-sidebar-text: #f1f5f9;
@@ -52,7 +49,6 @@ http://ionicframework.com/docs/theming/ */
   --chat-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
-/* ========== Modo oscuro - misma coherencia, texto visible ========== */
 .ion-palette-dark,
 [data-theme="dark"] {
   --ion-background-color: #0f172a;
@@ -94,7 +90,6 @@ http://ionicframework.com/docs/theming/ */
   --chat-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
-/* Modo oscuro vía preferencia del sistema */
 @media (prefers-color-scheme: dark) {
   :root {
     --ion-background-color: #0f172a;

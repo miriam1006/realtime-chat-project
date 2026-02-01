@@ -14,9 +14,7 @@ const Login: React.FC = () => {
     const [toastMessage, setToastMessage] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // Función para conectar con el Backend
     const doAuth = async (endpoint: 'login' | 'register') => {
-        // 1. Validar que no estén vacíos
         if (!email || !password) {
             setToastMessage('Por favor escribe email y contraseña');
             setShowToast(true);
@@ -25,15 +23,12 @@ const Login: React.FC = () => {
 
         setLoading(true);
         try {
-            // 2. Preparar los datos
-            // Si es registro, creamos un nickname basado en el email (antes del @)
             const payload = {
                 email,
                 password,
                 nickname: endpoint === 'register' ? email.split('@')[0] : undefined
             };
 
-            // 3. Enviar al servidor
             const BACKEND_URL = 'https://chat-backend-miriam.onrender.com';
 
             const response = await fetch(`${BACKEND_URL}/auth/${endpoint}`, {
@@ -45,17 +40,11 @@ const Login: React.FC = () => {
             const data = await response.json();
             setLoading(false);
 
-            console.log('📦 RESPUESTA DEL SERVER:', data); // <--- Espía para ver qué llega
-
             if (response.ok) {
                 if (endpoint === 'login') {
+                    const myToken = data.token;
+                    const myUser = data.user.nickname;
 
-                    // --- CORRECCIÓN FINAL ---
-                    // Aquí leemos EXACTAMENTE lo que vi en tu captura de pantalla
-                    const myToken = data.token;              // En la foto dice "token"
-                    const myUser = data.user.nickname;       // En la foto dice "user" -> "nickname"
-
-                    // Si faltan datos, no dejamos pasar
                     if (!myToken || !myUser) {
                         setToastMessage('Error: Credenciales correctas, pero falta información del servidor.');
                         console.error('Faltan datos:', { myToken, myUser });
@@ -63,21 +52,15 @@ const Login: React.FC = () => {
                         return;
                     }
 
-                    // Guardamos en la memoria del navegador
                     localStorage.setItem('token', myToken);
                     localStorage.setItem('nickname', myUser);
-
-                    console.log('✅ LOGIN EXITOSO. Usuario:', myUser);
-
-                    // Nos vamos al chat
                     history.push('/home');
-                    window.location.reload(); // Recarga necesaria para actualizar el socket
+                    window.location.reload();
                 } else {
                     setToastMessage('¡Registro exitoso! Ahora inicia sesión.');
                     setShowToast(true);
                 }
             } else {
-                // Si el servidor dice que no (ej: pass incorrecto o usuario ya existe)
                 setToastMessage(data.message || 'Error en el servidor');
                 setShowToast(true);
             }
@@ -93,7 +76,7 @@ const Login: React.FC = () => {
         <IonPage>
             <IonHeader>
                 <IonToolbar color="primary">
-                    <IonTitle>Bienvenido al Chat 🔐</IonTitle>
+                    <IonTitle>Bienvenido al Chat</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent className="ion-padding">

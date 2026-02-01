@@ -12,14 +12,10 @@ export class AuthService {
         private jwtService: JwtService,
     ) { }
 
-    // --- FUNCIÓN PARA REGISTRAR ---
     async register(registerDto: any) {
         const { email, nickname, password } = registerDto;
-
-        // 1. Encriptar la contraseña
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // 2. Crear el usuario
         try {
             const user = await this.userModel.create({
                 email,
@@ -37,11 +33,8 @@ export class AuthService {
         }
     }
 
-    // --- FUNCIÓN PARA LOGIN ---
     async login(loginDto: any) {
         const { email, password } = loginDto;
-
-        // 1. Buscar usuario por email
         const user = await this.userModel.findOne({ email });
         if (!user) {
             throw new BadRequestException('Credenciales inválidas');
@@ -53,7 +46,6 @@ export class AuthService {
             throw new BadRequestException('Credenciales inválidas');
         }
 
-        // 3. Generar y retornar JWT
         const token = this.jwtService.sign({
             sub: user._id,
             email: user.email,
