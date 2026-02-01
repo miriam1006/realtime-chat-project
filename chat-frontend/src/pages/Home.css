@@ -83,15 +83,21 @@
 
 .channel-item--active {
   --background: var(--chat-channel-active);
-  --color: var(--chat-channel-active-text);
+  --color: #ffffff;
   border-left: 3px solid var(--ion-color-primary);
   margin-left: 9px;
   padding-left: 8px;
+  font-weight: 600;
 }
 
 .channel-item--active ion-label,
 .channel-item--active ion-icon {
-  color: var(--chat-channel-active-text);
+  color: #ffffff !important;
+  --color: #ffffff;
+}
+
+.channel-item--active ion-label {
+  font-weight: 600;
 }
 
 /* Sección usuario y salir */
@@ -284,22 +290,25 @@
   box-shadow: var(--chat-shadow);
 }
 
-/* Mensajes del sistema: discretos, centrados (estilo WhatsApp) */
+/* Mensajes del sistema: pequeños, grises y centrados */
 .chat-message--system {
   justify-content: center;
-  margin: 12px 0;
+  align-items: center;
+  margin: 8px 0;
   padding: 0 16px;
+  width: 100%;
 }
 
 .chat-system-text {
-  font-size: 0.8rem;
-  color: var(--chat-system-text);
+  font-size: 0.75rem;
+  color: var(--chat-system-text, #6b7280);
   text-align: center;
   max-width: 90%;
   padding: 4px 12px;
-  background: var(--chat-system-bg);
+  background: transparent;
   border-radius: 6px;
   font-style: italic;
+  margin: 0 auto;
 }
 
 .ion-palette-dark .chat-system-text,

@@ -3,7 +3,7 @@ import {
   IonFooter, IonItem, IonInput, IonButton, IonIcon, IonButtons,
   IonSplitPane, IonMenu, IonList, IonMenuToggle, IonLabel, IonAvatar
 } from '@ionic/react';
-import { send, logOutOutline, menu, chatbubbles, personCircle } from 'ionicons/icons';
+import { send, logOutOutline, menu, chatbubbles } from 'ionicons/icons';
 import { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import { useHistory } from 'react-router-dom';
@@ -11,9 +11,14 @@ import './Home.css';
 
 // Conectamos al servidor
 const socket = io('https://chat-backend-miriam.onrender.com', {
-  transports: ['websocket', 'polling'] // Esto ayuda a que conecte mejor en móviles
+  transports: ['websocket', 'polling']
 });
 
+// --- FUNCIÓN PARA GENERAR AVATAR ---
+const getAvatar = (seed: string) => {
+  // Genera un avatar único basado en el nombre (seed)
+  return `https://api.dicebear.com/9.x/avataaars/svg?seed=${seed}&backgroundColor=b6e3f4,c0aede,d1d4f9`;
+}
 
 const Home: React.FC = () => {
   const history = useHistory();
@@ -21,7 +26,7 @@ const Home: React.FC = () => {
   const [chatHistory, setChatHistory] = useState<any[]>([]);
   const [user, setUser] = useState('');
   const [typingUser, setTypingUser] = useState('');
-  const [currentChannel, setCurrentChannel] = useState('General'); // <--- Nuevo: Control de Canales
+  const [currentChannel, setCurrentChannel] = useState('General');
 
   useEffect(() => {
     const myName = localStorage.getItem('nickname');
@@ -35,7 +40,14 @@ const Home: React.FC = () => {
     socket.emit('join', currentChannel);
 
     socket.on('message', (payload) => {
-      setChatHistory((prev) => [...prev, payload]);
+      setChatHistory((prev) => {
+        const last = prev[prev.length - 1];
+        // Ignorar si el mensaje nuevo es idéntico al último
+        if (last && last.user === payload.user && last.text === payload.text) {
+          return prev;
+        }
+        return [...prev, payload];
+      });
     });
 
     socket.on('chat-history', (oldMessages) => {
@@ -54,13 +66,12 @@ const Home: React.FC = () => {
       socket.off('typing');
       socket.off('chat-history');
     };
-  }, [history, user]);
+  }, [history, user, currentChannel]); // Agregué currentChannel a las dependencias
 
-  // Función para cambiar de canal (solo visual por ahora)
   const switchChannel = (channelName: string) => {
     setCurrentChannel(channelName);
-    setChatHistory([]); // Limpiamos pantalla al cambiar
-    socket.emit('join', channelName); // Avisamos al server (aunque falta lógica allá)
+    setChatHistory([]);
+    socket.emit('join', channelName);
   };
 
   const sendMessage = () => {
@@ -69,7 +80,7 @@ const Home: React.FC = () => {
     socket.emit('message', {
       user: user,
       text: message,
-      room: currentChannel, // Ahora enviamos al canal actual
+      room: currentChannel,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     });
 
@@ -121,7 +132,11 @@ const Home: React.FC = () => {
           {/* Sección de Usuario */}
           <div className="sidebar-user-section">
             <IonItem lines="none" className="user-info-item">
-              <IonIcon icon={personCircle} slot="start" className="user-avatar-icon" />
+              {/* AVATAR PROPIO EN EL MENU */}
+              <IonAvatar slot="start" className="user-avatar-icon">
+                <img src={getAvatar(user)} alt="Mi avatar" />
+              </IonAvatar>
+
               <IonLabel>
                 <h2 className="user-name">{user}</h2>
                 <p className="user-status">● En línea</p>
@@ -152,6 +167,7 @@ const Home: React.FC = () => {
             {chatHistory.map((msg, index) => {
               const isSystem = msg.user === 'Sistema';
               const isMine = msg.user === user;
+
               if (isSystem) {
                 return (
                   <div key={index} className="chat-message chat-message--system">
@@ -165,9 +181,13 @@ const Home: React.FC = () => {
                   className={`chat-message ${isMine ? 'chat-message--mine' : ''}`}
                 >
                   <div className="chat-message-inner">
+                    {/* AVATAR EN CADA MENSAJE */}
                     <div className="chat-message-avatar">
-                      {msg.user ? msg.user.charAt(0).toUpperCase() : '?'}
+                      <IonAvatar style={{ width: '100%', height: '100%' }}>
+                        <img src={getAvatar(msg.user || 'Anónimo')} alt="avatar" />
+                      </IonAvatar>
                     </div>
+
                     <div className="chat-message-body">
                       <div className="chat-message-meta">
                         <span className="chat-message-user">{msg.user || 'Anónimo'}</span>

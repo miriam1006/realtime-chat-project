@@ -26,9 +26,9 @@ http://ionicframework.com/docs/theming/ */
   --chat-sidebar-header: #1e293b;
   --chat-sidebar-text: #f1f5f9;
   --chat-sidebar-border: rgba(255, 255, 255, 0.06);
-  --chat-channel-active: rgba(255, 255, 255, 0.12);
+  --chat-channel-active: rgba(255, 255, 255, 0.18);
   --chat-channel-active-text: #ffffff;
-  --chat-channel-inactive: #94a3b8;
+  --chat-channel-inactive: #cbd5e1;
   --chat-content-bg: #f8fafc;
   --chat-message-bg-other: #ffffff;
   --chat-message-border-other: #e2e8f0;
@@ -68,9 +68,9 @@ http://ionicframework.com/docs/theming/ */
   --chat-sidebar-header: #0f172a;
   --chat-sidebar-text: #e2e8f0;
   --chat-sidebar-border: rgba(255, 255, 255, 0.06);
-  --chat-channel-active: rgba(255, 255, 255, 0.1);
+  --chat-channel-active: rgba(255, 255, 255, 0.15);
   --chat-channel-active-text: #ffffff;
-  --chat-channel-inactive: #94a3b8;
+  --chat-channel-inactive: #cbd5e1;
   --chat-content-bg: #0f172a;
   --chat-message-bg-other: #1e293b;
   --chat-message-border-other: #334155;
@@ -106,9 +106,9 @@ http://ionicframework.com/docs/theming/ */
     --chat-sidebar-header: #0f172a;
     --chat-sidebar-text: #e2e8f0;
     --chat-sidebar-border: rgba(255, 255, 255, 0.06);
-    --chat-channel-active: rgba(255, 255, 255, 0.1);
+    --chat-channel-active: rgba(255, 255, 255, 0.15);
     --chat-channel-active-text: #ffffff;
-    --chat-channel-inactive: #94a3b8;
+    --chat-channel-inactive: #cbd5e1;
     --chat-content-bg: #0f172a;
     --chat-message-bg-other: #1e293b;
     --chat-message-border-other: #334155;
