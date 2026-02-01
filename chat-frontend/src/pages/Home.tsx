@@ -10,7 +10,10 @@ import { useHistory } from 'react-router-dom';
 import './Home.css';
 
 // Conectamos al servidor
-const socket = io('http://localhost:3000');
+const socket = io('https://chat-backend-miriam.onrender.com', {
+  transports: ['websocket', 'polling'] // Esto ayuda a que conecte mejor en móviles
+});
+
 
 const Home: React.FC = () => {
   const history = useHistory();

@@ -34,7 +34,9 @@ const Login: React.FC = () => {
             };
 
             // 3. Enviar al servidor
-            const response = await fetch(`http://localhost:3000/auth/${endpoint}`, {
+            const BACKEND_URL = 'https://chat-backend-miriam.onrender.com';
+
+            const response = await fetch(`${BACKEND_URL}/auth/${endpoint}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
